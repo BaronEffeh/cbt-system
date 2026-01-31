@@ -29,7 +29,8 @@ const ExamInstructions = () => {
       return;
     }
     setOngoingExamId(examId);
-    navigate(`/student/exam/${examId}/start`);
+    navigate(`/student/exam/${examId}`);
+    // navigate(`/student/exam/${examId}/start`);
   };
 
   return (

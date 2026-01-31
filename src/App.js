@@ -5,16 +5,37 @@ import TeacherDashboard from "./dashboards/teacher/TeacherDashboard";
 import AdminDashboard from "./dashboards/admin/AdminDashboard";
 import ExamInstructions from "./pages/student/ExamInstructions";
 import ExamPage from "./pages/student/ExamPage";
+import Login from "./pages/Login/Login";
+
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
-      <Route path="/student/dashboard" element={<StudentDashboard />} />
+      <Route path="/" element={<Login />} />
+
+      <Route
+        path="/student"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <StudentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      {/* <Route path="/student/dashboard" element={<StudentDashboard />} /> */}
+      <Route
+        path="/student/exam/:examId"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <ExamPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/student/exam/:examId/instructions"
         element={<ExamInstructions />}
       />
-      <Route path="/student/exam/:examId/start" element={<ExamPage />} />
+      {/* <Route path="/student/exam/:examId/start" element={<ExamPage />} /> */}
 
       <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
