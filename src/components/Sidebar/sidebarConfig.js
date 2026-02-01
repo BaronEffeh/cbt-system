@@ -6,7 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 export const sidebarConfig = {
   student: [
-    { label: "Dashboard", icon: <DashboardIcon />, path: "/student/dashboard" },
+    { label: "Dashboard", icon: <DashboardIcon />, path: "/student" },
     { label: "Logout", icon: <LogoutIcon />, path: "/logout", isBottom: true },
   ],
 
