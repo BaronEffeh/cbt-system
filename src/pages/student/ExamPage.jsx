@@ -8,7 +8,11 @@ import {
   CardContent,
   Radio,
   Stack,
+  Dialog,
+  DialogContent,
 } from "@mui/material";
+import SendIcon from '@mui/icons-material/Send';
+import { useNavigate } from "react-router-dom";
 
 // MOCK QUESTIONS
 const mockQuestions = Array.from({ length: 50 }, (_, i) => ({
@@ -18,21 +22,25 @@ const mockQuestions = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 const ExamPage = () => {
+  const navigate = useNavigate();
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(3600);
+  const [openSubmitModal, setOpenSubmitModal] = useState(false);
 
   const submitExam = useCallback(() => {
     console.log("Submitted answers:", answers);
-    alert("Exam submitted successfully!");
-  }, [answers]);
+    navigate("/student");
+  }, [answers, navigate]);
 
+  // TIMER
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          submitExam();
+          submitExam(); // auto submit — NO modal
           return 0;
         }
         return prev - 1;
@@ -61,7 +69,7 @@ const ExamPage = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Grid container spacing={3} wrap="nowrap">
-        {/* Question */}
+        {/* QUESTION PANEL */}
         <Grid item xs={12} md={9}>
           <Card>
             <CardContent
@@ -75,9 +83,9 @@ const ExamPage = () => {
             >
               <Typography mb={2}>{question.question}</Typography>
 
-              {/* Options */}
+              {/* OPTIONS */}
               <Box sx={{ mt: "auto" }}>
-                <Grid container spacing={2} sx={{justifyContent: "center"}}>
+                <Grid container spacing={2} justifyContent="center">
                   {question.options.map((opt) => {
                     const isSelected = answers[currentIndex] === opt;
 
@@ -88,31 +96,24 @@ const ExamPage = () => {
                           sx={{
                             cursor: "pointer",
                             width: "383px",
-                            height: "25px",
+                            height: "48px",
                             borderRadius: "8px",
                             px: 2,
-                            py: 1,
                             display: "flex",
                             alignItems: "center",
                             gap: 1,
-
                             bgcolor: isSelected ? "#E6ECF3" : "#FFFFFF",
                             border: `1px solid ${
                               isSelected ? "#003366" : "#D1D1CF"
                             }`,
-
-                            "&:hover": {
-                              bgcolor: "#F3F6FA",
-                            },
+                            "&:hover": { bgcolor: "#F3F6FA" },
                           }}
                         >
                           <Radio
                             checked={isSelected}
                             sx={{
                               color: "#003366",
-                              "&.Mui-checked": {
-                                color: "#003366",
-                              },
+                              "&.Mui-checked": { color: "#003366" },
                             }}
                           />
                           <Typography>{opt}</Typography>
@@ -126,13 +127,13 @@ const ExamPage = () => {
           </Card>
         </Grid>
 
-        {/* Side panel */}
+        {/* SIDE PANEL */}
         <Grid item xs={12} md={3} sx={{ width: "550px" }}>
           <Stack spacing={2} alignItems="center">
             <Typography
               fontWeight="bold"
               sx={{
-                color: "green",
+                color: timeLeft <= 300 ? "#D32F2F" : "green",
                 bgcolor: "#FAFAF7",
                 border: "1px solid #D1D1CF",
                 borderRadius: "4px",
@@ -186,7 +187,7 @@ const ExamPage = () => {
         </Grid>
       </Grid>
 
-      {/* Navigation */}
+      {/* NAVIGATION */}
       <Box sx={{ mt: 4, display: "flex", justifyContent: "space-between" }}>
         <Button
           variant="outlined"
@@ -209,17 +210,289 @@ const ExamPage = () => {
             bgcolor: "#002244",
             "&:hover": { bgcolor: "#003366" },
           }}
-          onClick={
+          onClick={() =>
             currentIndex === mockQuestions.length - 1
-              ? submitExam
-              : () => setCurrentIndex((i) => i + 1)
+              ? setOpenSubmitModal(true)
+              : setCurrentIndex((i) => i + 1)
           }
         >
           {currentIndex === mockQuestions.length - 1 ? "Submit" : "Next"}
         </Button>
       </Box>
+
+      {/* SUBMIT CONFIRMATION MODAL */}
+      <Dialog open={openSubmitModal} onClose={() => setOpenSubmitModal(false)}>
+        <DialogContent sx={{ textAlign: "center", px: 4, py: 5, bgcolor: "#F9F9F6",border: "1px solid #12AF20" }}>
+          <Box sx={{bgcolor: "#D1F0D4", border: "1px solid #AAE2AF", borderRadius: "40px", alignItems: "center", justifySelf: "center", py: "24px", px: "24px"}}>
+            <SendIcon />
+          </Box>
+          <Typography variant="h6" mb={1}>
+            Submit Exam?
+          </Typography>
+
+          <Typography color="text.secondary" mb={4}>
+            Once submitted, you won’t be able to make changes. <br /> Are you sure you want to continue?
+          </Typography>
+
+          <Stack direction="row" spacing={2} justifyContent="center">
+            <Button
+              variant="outlined"
+              sx={{
+                borderRadius: "20px",
+                border: "1px solid #003366",
+                color: "#003366",
+              }}
+              onClick={() => setOpenSubmitModal(false)}
+            >
+              Continue Exam
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                borderRadius: "20px",
+                bgcolor: "#003366",
+              }}
+              onClick={submitExam}
+            >
+              Submit Exam
+            </Button>
+          </Stack>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
 
 export default ExamPage;
+
+
+
+
+
+
+// import React, { useEffect, useState, useCallback } from "react";
+// import {
+//   Box,
+//   Typography,
+//   Button,
+//   Grid,
+//   Card,
+//   CardContent,
+//   Radio,
+//   Stack,
+// } from "@mui/material";
+
+// // MOCK QUESTIONS
+// const mockQuestions = Array.from({ length: 50 }, (_, i) => ({
+//   id: i + 1,
+//   question: `Question ${i + 1}: Simplify 3x + 5x - 4x`,
+//   options: ["4x", "12x", "8x", "x"],
+// }));
+
+// const ExamPage = () => {
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const [answers, setAnswers] = useState({});
+//   const [timeLeft, setTimeLeft] = useState(3600);
+
+//   const submitExam = useCallback(() => {
+//     console.log("Submitted answers:", answers);
+//     alert("Exam submitted successfully!");
+//   }, [answers]);
+
+//   useEffect(() => {
+//     const timer = setInterval(() => {
+//       setTimeLeft((prev) => {
+//         if (prev <= 1) {
+//           clearInterval(timer);
+//           submitExam();
+//           return 0;
+//         }
+//         return prev - 1;
+//       });
+//     }, 1000);
+
+//     return () => clearInterval(timer);
+//   }, [submitExam]);
+
+//   const formatTime = (seconds) => {
+//     const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+//     const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+//     const s = String(seconds % 60).padStart(2, "0");
+//     return `${h}:${m}:${s}`;
+//   };
+
+//   const handleAnswer = (option) => {
+//     setAnswers((prev) => ({
+//       ...prev,
+//       [currentIndex]: option,
+//     }));
+//   };
+
+//   const question = mockQuestions[currentIndex];
+
+//   return (
+//     <Box sx={{ p: 3 }}>
+//       <Grid container spacing={3} wrap="nowrap">
+//         {/* Question */}
+//         <Grid item xs={12} md={9}>
+//           <Card>
+//             <CardContent
+//               sx={{
+//                 bgcolor: "#F9F9F6",
+//                 border: "1px solid #D1D1CF",
+//                 height: "500px",
+//                 display: "flex",
+//                 flexDirection: "column",
+//               }}
+//             >
+//               <Typography mb={2}>{question.question}</Typography>
+
+//               {/* Options */}
+//               <Box sx={{ mt: "auto" }}>
+//                 <Grid container spacing={2} sx={{justifyContent: "center"}}>
+//                   {question.options.map((opt) => {
+//                     const isSelected = answers[currentIndex] === opt;
+
+//                     return (
+//                       <Grid item xs={12} sm={6} key={opt}>
+//                         <Box
+//                           onClick={() => handleAnswer(opt)}
+//                           sx={{
+//                             cursor: "pointer",
+//                             width: "383px",
+//                             height: "25px",
+//                             borderRadius: "8px",
+//                             px: 2,
+//                             py: 1,
+//                             display: "flex",
+//                             alignItems: "center",
+//                             gap: 1,
+
+//                             bgcolor: isSelected ? "#E6ECF3" : "#FFFFFF",
+//                             border: `1px solid ${
+//                               isSelected ? "#003366" : "#D1D1CF"
+//                             }`,
+
+//                             "&:hover": {
+//                               bgcolor: "#F3F6FA",
+//                             },
+//                           }}
+//                         >
+//                           <Radio
+//                             checked={isSelected}
+//                             sx={{
+//                               color: "#003366",
+//                               "&.Mui-checked": {
+//                                 color: "#003366",
+//                               },
+//                             }}
+//                           />
+//                           <Typography>{opt}</Typography>
+//                         </Box>
+//                       </Grid>
+//                     );
+//                   })}
+//                 </Grid>
+//               </Box>
+//             </CardContent>
+//           </Card>
+//         </Grid>
+
+//         {/* Side panel */}
+//         <Grid item xs={12} md={3} sx={{ width: "550px" }}>
+//           <Stack spacing={2} alignItems="center">
+//             <Typography
+//               fontWeight="bold"
+//               sx={{
+//                 color: "green",
+//                 bgcolor: "#FAFAF7",
+//                 border: "1px solid #D1D1CF",
+//                 borderRadius: "4px",
+//                 px: 15,
+//                 py: 2,
+//               }}
+//             >
+//               {formatTime(timeLeft)}
+//             </Typography>
+
+//             <Grid
+//               container
+//               spacing={1}
+//               sx={{
+//                 bgcolor: "#FAFAF7",
+//                 border: "1px solid #D1D1CF",
+//                 borderRadius: "4px",
+//                 justifyContent: "center",
+//                 py: 2,
+//               }}
+//             >
+//               {mockQuestions.map((_, index) => {
+//                 const isAnswered = answers[index] !== undefined;
+//                 const isCurrent = index === currentIndex;
+
+//                 return (
+//                   <Grid item xs={3} key={index}>
+//                     <Button
+//                       size="small"
+//                       onClick={() => setCurrentIndex(index)}
+//                       sx={{
+//                         minWidth: "45px",
+//                         borderRadius: "2px",
+//                         border: "1px solid #D1D1CF",
+//                         bgcolor: isCurrent
+//                           ? "#003366"
+//                           : isAnswered
+//                           ? "#5EC967"
+//                           : "transparent",
+//                         color:
+//                           isCurrent || isAnswered ? "#F9F9F6" : "#000",
+//                       }}
+//                     >
+//                       {index + 1}
+//                     </Button>
+//                   </Grid>
+//                 );
+//               })}
+//             </Grid>
+//           </Stack>
+//         </Grid>
+//       </Grid>
+
+//       {/* Navigation */}
+//       <Box sx={{ mt: 4, display: "flex", justifyContent: "space-between" }}>
+//         <Button
+//           variant="outlined"
+//           color="#090909"
+//           sx={{
+//             borderRadius: "16px",
+//             bgcolor: "#FCFCFA",
+//             border: "1px solid #003366",
+//           }}
+//           disabled={currentIndex === 0}
+//           onClick={() => setCurrentIndex((i) => i - 1)}
+//         >
+//           Previous
+//         </Button>
+
+//         <Button
+//           variant="contained"
+//           sx={{
+//             borderRadius: "16px",
+//             bgcolor: "#002244",
+//             "&:hover": { bgcolor: "#003366" },
+//           }}
+//           onClick={
+//             currentIndex === mockQuestions.length - 1
+//               ? submitExam
+//               : () => setCurrentIndex((i) => i + 1)
+//           }
+//         >
+//           {currentIndex === mockQuestions.length - 1 ? "Submit" : "Next"}
+//         </Button>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+// export default ExamPage;
