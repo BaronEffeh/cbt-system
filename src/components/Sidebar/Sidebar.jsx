@@ -16,12 +16,17 @@ const Sidebar = ({ role }) => {
     <Box
       sx={{
         width: 240,
+        position: "fixed",
+        top: 0,
+        left: 0,
+        bottom: 0,
         height: "100vh",
         bgcolor: "#083b66",
         color: "#fff",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        overflow: "hidden",
       }}
     >
       {/* Logo */}

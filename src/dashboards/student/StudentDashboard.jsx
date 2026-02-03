@@ -31,7 +31,7 @@ const StudentDashboard = () => {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", ml: "240px", p: 3 }}>
       <Sidebar role="student" />
 
       <Box sx={{ flex: 1, p: 3 }}>
