@@ -44,13 +44,14 @@ const Sidebar = ({ role }) => {
                 component={NavLink}
                 to={item.path}
                 sx={{
-                  color: "#fff",
+                  color: "#FDFDFC",
                   "&.active": {
                     bgcolor: "#0b4f8a",
+                    borderLeft: "2px solid #FDFDFC"
                   },
                 }}
               >
-                <ListItemIcon sx={{ color: "#fff" }}>
+                <ListItemIcon sx={{ color: "#FDFDFC" }}>
                   {item.icon}
                 </ListItemIcon>
                 <ListItemText primary={item.label} />
