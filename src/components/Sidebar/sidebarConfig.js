@@ -11,8 +11,8 @@ export const sidebarConfig = {
   ],
 
   teacher: [
-    { label: "Dashboard", icon: <DashboardIcon />, path: "/teacher/dashboard" },
-    { label: "Question Bank", icon: <AssignmentIcon />, path: "/teacher/questions" },
+    { label: "Dashboard", icon: <DashboardIcon />, path: "/teacher" },
+    { label: "Question Bank", icon: <AssignmentIcon />, path: "/teacher/question-bank" },
     { label: "Logout", icon: <LogoutIcon />, path: "/logout", isBottom: true },
   ],
 

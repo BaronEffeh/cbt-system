@@ -5,6 +5,7 @@ import Header from "../../components/Header/Header";
 import TeacherSummaryCards from "../../components/Teacher/TeacherSummaryCards";
 import RecentQuestions from "../../components/Teacher/RecentQuestions";
 import StudentsPerClass from "../../components/Teacher/StudentsPerClass";
+import QuestionBank from "../../pages/teacher/QuestionBank";
 
 const TeacherDashboard = () => {
   return (
@@ -26,6 +27,10 @@ const TeacherDashboard = () => {
 
           <Grid item xs={12} md={5} sx={{width: "45%"}}>
             <StudentsPerClass />
+          </Grid>
+
+          <Grid item xs={12} md={5} sx={{width: "45%"}}>
+            <QuestionBank />
           </Grid>
         </Grid>
       </Box>
